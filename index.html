@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía: Automatización de Eventos con QR y Telegram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a4d6d 0%, #2563eb 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 20px;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        .nav {
+            background: #f8fafc;
+            padding: 20px 40px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #1a4d6d;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav a:hover {
+            background: #1a4d6d;
+            color: white;
+        }
+
+        /* Content */
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            color: #1a4d6d;
+            font-size: 32px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2563eb;
+        }
+
+        .section h3 {
+            color: #2563eb;
+            font-size: 24px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .section h4 {
+            color: #1a4d6d;
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #2563eb;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #1a4d6d;
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        /* Flow Diagram */
+        .flow {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .flow-step {
+            display: inline-block;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin: 10px;
+            border: 2px solid #2563eb;
+            font-weight: 600;
+            color: #1a4d6d;
+        }
+
+        .flow-arrow {
+            display: inline-block;
+            color: #2563eb;
+            font-size: 24px;
+            margin: 0 10px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #1a4d6d;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .code-block code {
+            color: #10b981;
+        }
+
+        /* Alert Boxes */
+        .alert {
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid;
+        }
+
+        .alert-info {
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #1e40af;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .alert-warning {
+            background: #fffbeb;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8fafc;
+            border-radius: 6px;
+            padding-left: 40px;
+            position: relative;
+        }
+
+        .checklist li:before {
+            content: "☐";
+            position: absolute;
+            left: 15px;
+            font-size: 20px;
+            color: #2563eb;
+        }
+
+        /* Button */
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #2563eb 0%, #1a4d6d 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a4d6d;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header p {
+                font-size: 16px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .nav {
+                padding: 15px 20px;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-step {
+                display: block;
+                margin: 10px 0;
+            }
+
+            .flow-arrow {
+                display: block;
+                transform: rotate(90deg);
+            }
+        }
+
+        /* Number badges */
+        .step-number {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+
+        /* Icon list */
+        .icon-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .icon-list li {
+            padding: 10px 0;
+            padding-left: 35px;
+            position: relative;
+        }
+
+        .icon-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <span class="badge">🚀 Guía Completa de Automatización</span>
+            <h1>Sistema de Eventos con QR y Telegram</h1>
+            <p>Aprende a crear una automatización profesional completa: desde el registro hasta el día del evento</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav">
+            <a href="#descripcion">📋 Descripción</a>
+            <a href="#requisitos">🛠️ Requisitos</a>
+            <a href="#arquitectura">🏗️ Arquitectura</a>
+            <a href="#flujo1">1️⃣ Flujo 1</a>
+            <a href="#flujo2">2️⃣ Flujo 2</a>
+            <a href="#flujo3">3️⃣ Flujo 3</a>
+            <a href="#basedatos">🗄️ Base de Datos</a>
+            <a href="#errores">⚠️ Errores</a>
+            <a href="#checklist">✅ Checklist</a>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            
+            <!-- Descripción -->
+            <section id="descripcion" class="section">
+                <h2>📋 ¿Qué hace esta automatización?</h2>
+                
+                <div class="alert alert-info">
+                    <strong>💡 Resumen:</strong> Sistema completo para gestionar eventos de principio a fin, desde que el usuario se registra hasta que recibe recordatorios el día del evento.
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-icon">📝</div>
+                        <h3>Registro Web</h3>
+                        <p>Formulario profesional con validación en tiempo real que captura los datos de los asistentes.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🎫</div>
+                        <h3>Entrada en PDF</h3>
+                        <p>Generación automática de entrada personalizada con código QR único e intransferible.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📧</div>
+                        <h3>Envío por Email</h3>
+                        <p>Email automático con la entrada adjunta y confirmación de registro.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🤖</div>
+                        <h3>Bot de Telegram</h3>
+                        <p>Interacción con botones: ubicación, agenda y premios del evento.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🔔</div>
+                        <h3>Recordatorios</h3>
+                        <p>Mensaje automático el día del evento con información actualizada.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🗄️</div>
+                        <h3>Base de Datos</h3>
+                        <p>Almacenamiento organizado de todos los registros y estadísticas.</p>
+                    </div>
+                </div>
+
+                <h3>Flujo de Usuario</h3>
+                <div class="flow">
+                    <div class="flow-step">👤 Usuario llena formulario</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">📧 Recibe entrada por email</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">🤖 Interactúa con bot</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">🔔 Recibe recordatorio</div>
+                </div>
+            </section>
+
+            <!-- Requisitos -->
+            <section id="requisitos" class="section">
+                <h2>🛠️ Requisitos Técnicos</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Herramienta</th>
+                            <th>Función</th>
+                            <th>Obligatorio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>n8n</strong></td>
+                            <td>Motor de automatización</td>
+                            <td>✅ Sí</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PostgreSQL</strong></td>
+                            <td>Base de datos</td>
+                            <td>✅ Sí</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Telegram Bot</strong></td>
+                            <td>Interacción con usuarios</td>
+                            <td>✅ Sí</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Servidor Web</strong></td>
+                            <td>Alojar formulario HTML</td>
+                            <td>✅ Sí</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gmail/SMTP</strong></td>
+                            <td>Envío de emails</td>
+                            <td>✅ Sí</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Configuraciones Previas</h3>
+                <ul class="icon-list">
+                    <li>Crear bot de Telegram con @BotFather</li>
+                    <li>Configurar credenciales en n8n</li>
+                    <li>Preparar base de datos PostgreSQL</li>
+                    <li>Obtener acceso SMTP para emails</li>
+                    <li>Tener servidor para alojar formulario</li>
+                </ul>
+            </section>
+
+            <!-- Arquitectura -->
+            <section id="arquitectura" class="section">
+                <h2>🏗️ Arquitectura: 3 Flujos</h2>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>🎯 FLUJO 1: Registro</h3>
+                        <p><strong>Trigger:</strong> Webhook (formulario web)</p>
+                        <p><strong>Función:</strong> Capturar datos, generar PDF con QR y enviar por email</p>
+                        <p><strong>Nodos:</strong> 8 nodos</p>
+                    </div>
+                    <div class="card">
+                        <h3>🤖 FLUJO 2: Bot Telegram</h3>
+                        <p><strong>Trigger:</strong> Message + Callback Query</p>
+                        <p><strong>Función:</strong> Responder saludos y botones interactivos</p>
+                        <p><strong>Nodos:</strong> 10+ nodos</p>
+                    </div>
+                    <div class="card">
+                        <h3>📅 FLUJO 3: Recordatorio</h3>
+                        <p><strong>Trigger:</strong> Schedule (día del evento)</p>
+                        <p><strong>Función:</strong> Envío masivo de recordatorios</p>
+                        <p><strong>Nodos:</strong> 4 nodos</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FLUJO 1 -->
+            <section id="flujo1" class="section">
+                <h2>🎯 FLUJO 1: Registro y Email</h2>
+
+                <div class="alert alert-info">
+                    <strong>Objetivo:</strong> Capturar datos del formulario web, generar entrada en PDF con QR único y enviarla por email.
+                </div>
+
+                <h3>Diagrama del Flujo</h3>
+                <div class="flow">
+                    <div class="flow-step">Webhook</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Preparar Datos</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Guardar BD</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Generar QR</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">HTML to PDF</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Email</div>
+                </div>
+
+                <h3>Paso a Paso</h3>
+
+                <h4><span class="step-number">1</span>Webhook - Recibir Datos</h4>
+                <p><strong>Tipo:</strong> Webhook</p>
+                <p><strong>Configuración:</strong></p>
+                <ul>
+                    <li>HTTP Method: POST</li>
+                    <li>Path: /registro-evento</li>
+                    <li>Response Mode: Last Node</li>
+                </ul>
+                <p><strong>¿Qué hace?</strong> Escucha las peticiones del formulario web y recibe los datos JSON.</p>
+
+                <h4><span class="step-number">2</span>Edit Fields - Estructurar Datos</h4>
+                <p><strong>Tipo:</strong> Set / Edit Fields</p>
+                <p><strong>Campos a crear:</strong></p>
+                <div class="code-block">
+                    <code>id</code> → Generar UUID único<br>
+                    <code>nombre_completo</code> → nombre + apellido<br>
+                    <code>fecha_registro</code> → Timestamp actual<br>
+                    Todos los campos del formulario
+                </div>
+
+                <h4><span class="step-number">3</span>PostgreSQL - Guardar en BD</h4>
+                <p><strong>Tipo:</strong> Postgres</p>
+                <p><strong>Operation:</strong> Execute Query</p>
+                <div class="code-block">
+                    INSERT INTO registros_evento (...) VALUES (...)
+                </div>
+
+                <h4><span class="step-number">4</span>HTTP Request - Generar QR</h4>
+                <p><strong>URL:</strong> https://api.qrserver.com/v1/create-qr-code/</p>
+                <p><strong>Query Parameters:</strong></p>
+                <ul>
+                    <li>data → ID del registro</li>
+                    <li>size → 400x400</li>
+                    <li>color → Tu color en hexadecimal</li>
+                    <li>bgcolor → ffffff</li>
+                </ul>
+
+                <h4><span class="step-number">5</span>Code - Crear HTML</h4>
+                <p><strong>Función:</strong> Generar template HTML con diseño profesional incluyendo datos del usuario y QR.</p>
+
+                <h4><span class="step-number">6</span>HTML to PDF</h4>
+                <p><strong>Opciones:</strong></p>
+                <ul>
+                    <li>Nodo de comunidad: HTML to PDF</li>
+                    <li>API externa: html2pdf.app</li>
+                    <li>Librería: Puppeteer</li>
+                </ul>
+
+                <h4><span class="step-number">7</span>Move Binary Data</h4>
+                <p><strong>Mode:</strong> JSON to Binary</p>
+                <p><strong>Source Key:</strong> data</p>
+
+                <h4><span class="step-number">8</span>Gmail/SMTP - Enviar Email</h4>
+                <p><strong>To:</strong> Email del usuario</p>
+                <p><strong>Subject:</strong> Tu entrada al evento</p>
+                <p><strong>Attachments:</strong> PDF generado</p>
+            </section>
+
+            <!-- FLUJO 2 -->
+            <section id="flujo2" class="section">
+                <h2>🤖 FLUJO 2: Bot de Telegram</h2>
+
+                <div class="alert alert-info">
+                    <strong>Objetivo:</strong> Responder a usuarios que escriben al bot mostrando botones con información del evento (ubicación, agenda, premios).
+                </div>
+
+                <h3>Diagrama del Flujo</h3>
+                <div class="flow">
+                    <div class="flow-step">Telegram Trigger</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Switch (¿Mensaje o Botón?)</div>
+                    <span class="flow-arrow">↓</span>
+                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                        <div class="flow-step">Enviar Saludo + Botones</div>
+                        <div class="flow-step">Responder Botón</div>
+                    </div>
+                </div>
+
+                <h3>Paso a Paso</h3>
+
+                <h4><span class="step-number">1</span>Telegram Trigger</h4>
+                <p><strong>Updates a escuchar:</strong></p>
+                <ul class="icon-list">
+                    <li>Message (cuando escriben)</li>
+                    <li>Callback Query (cuando pulsan botones)</li>
+                </ul>
+
+                <h4><span class="step-number">2</span>Switch - Tipo de Interacción</h4>
+                <p><strong>Regla 1:</strong> Si $json.message existe → Es un mensaje</p>
+                <p><strong>Regla 2:</strong> Si $json.callback_query existe → Es un botón</p>
+
+                <h4><span class="step-number">3</span>Send Message - Saludo con Botones</h4>
+                <p><strong>Mensaje:</strong></p>
+                <div class="code-block">
+                    👋 ¡Hola!<br><br>
+                    Bienvenido al bot del evento.<br><br>
+                    Usa los botones para obtener información:
+                </div>
+
+                <p><strong>Botones (Inline Keyboard):</strong></p>
+                <div class="code-block">
+                    📍 Ubicación<br>
+                    📄 Agenda<br>
+                    🎁 Premios
+                </div>
+
+                <h4><span class="step-number">4</span>Switch - ¿Qué Botón?</h4>
+                <p>Detectar según callback_data:</p>
+                <ul>
+                    <li>ubicacion → Enviar localización</li>
+                    <li>agenda → Enviar programa</li>
+                    <li>premios → Enviar info de premios</li>
+                </ul>
+
+                <h4><span class="step-number">5</span>Respuestas por Botón</h4>
+                <p>Para cada botón:</p>
+                <ol>
+                    <li><strong>Answer Callback Query</strong> (quitar "loading")</li>
+                    <li><strong>Send Message/Location</strong> (enviar respuesta)</li>
+                </ol>
+
+                <div class="alert alert-success">
+                    <strong>💡 Tip:</strong> Para el botón de ubicación, usa "Send Location" con las coordenadas reales del evento.
+                </div>
+            </section>
+
+            <!-- FLUJO 3 -->
+            <section id="flujo3" class="section">
+                <h2>📅 FLUJO 3: Recordatorio del Día del Evento</h2>
+
+                <div class="alert alert-info">
+                    <strong>Objetivo:</strong> Enviar mensaje masivo a todos los asistentes registrados el día del evento.
+                </div>
+
+                <h3>Diagrama del Flujo</h3>
+                <div class="flow">
+                    <div class="flow-step">Schedule</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Consultar BD</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Split Out</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Send Message</div>
+                </div>
+
+                <h3>Paso a Paso</h3>
+
+                <h4><span class="step-number">1</span>Schedule Trigger</h4>
+                <p><strong>Trigger Times:</strong> Cron</p>
+                <p><strong>Expresión:</strong> 0 9 15 12 *</p>
+                <p><em>(Ejecuta el 15 de diciembre a las 9:00 AM)</em></p>
+
+                <div class="alert alert-warning">
+                    <strong>⚠️ Importante:</strong> Usa https://crontab.guru para verificar tu expresión cron.
+                </div>
+
+                <h4><span class="step-number">2</span>PostgreSQL - Obtener Usuarios</h4>
+                <div class="code-block">
+                    SELECT nombre_completo, telegram_id_numerico<br>
+                    FROM registros_evento<br>
+                    WHERE telegram_activo = TRUE
+                </div>
+
+                <h4><span class="step-number">3</span>Split Out</h4>
+                <p>Convierte el array de usuarios en items individuales para procesarlos uno por uno.</p>
+
+                <h4><span class="step-number">4</span>Telegram - Send Message</h4>
+                <p><strong>Mensaje:</strong></p>
+                <div class="code-block">
+                    🎉 ¡Hoy es el día del evento!<br><br>
+                    El evento comienza hoy a las 18:00.<br><br>
+                    No olvides tu entrada con código QR.
+                </div>
+                <p><strong>Incluir:</strong> Los mismos 3 botones (ubicación, agenda, premios)</p>
+            </section>
+
+            <!-- Base de Datos -->
+            <section id="basedatos" class="section">
+                <h2>🗄️ Estructura de Base de Datos</h2>
+
+                <h3>Tabla: registros_evento</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campo</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>TEXT</td>
+                            <td>ID único del registro (UUID)</td>
+                        </tr>
+                        <tr>
+                            <td>nombre</td>
+                            <td>TEXT</td>
+                            <td>Nombre del asistente</td>
+                        </tr>
+                        <tr>
+                            <td>apellido</td>
+                            <td>TEXT</td>
+                            <td>Apellido del asistente</td>
+                        </tr>
+                        <tr>
+                            <td>nombre_completo</td>
+                            <td>TEXT</td>
+                            <td>Nombre + Apellido</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>TEXT</td>
+                            <td>Email de contacto</td>
+                        </tr>
+                        <tr>
+                            <td>telefono</td>
+                            <td>TEXT</td>
+                            <td>Número de teléfono</td>
+                        </tr>
+                        <tr>
+                            <td>telegram_activo</td>
+                            <td>BOOLEAN</td>
+                            <td>Si marcó que quiere Telegram</td>
+                        </tr>
+                        <tr>
+                            <td>telegram_id_numerico</td>
+                            <td>TEXT</td>
+                            <td>ID numérico de Telegram</td>
+                        </tr>
+                        <tr>
+                            <td>fecha_registro</td>
+                            <td>TEXT</td>
+                            <td>Cuándo se registró</td>
+                        </tr>
+                        <tr>
+                            <td>fecha_creacion</td>
+                            <td>TIMESTAMP</td>
+                            <td>Timestamp automático</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Consultas Útiles</h3>
+                <div class="code-block">
+                    -- Ver total de registros<br>
+                    SELECT COUNT(*) FROM registros_evento;<br><br>
+                    
+                    -- Ver usuarios con Telegram<br>
+                    SELECT COUNT(*) FROM registros_evento<br>
+                    WHERE telegram_activo = TRUE;<br><br>
+                    
+                    -- Últimos 10 registros<br>
+                    SELECT nombre_completo, email, fecha_creacion<br>
+                    FROM registros_evento<br>
+                    ORDER BY fecha_creacion DESC<br>
+                    LIMIT 10;
+                </div>
+            </section>
+
+            <!-- Errores Comunes -->
+            <section id="errores" class="section">
+                <h2>⚠️ Errores Comunes y Soluciones</h2>
+
+                <div class="alert alert-error">
+                    <strong>❌ Error:</strong> "Bad Request: chat not found"<br>
+                    <strong>Causa:</strong> El bot no puede enviar mensajes al usuario.<br>
+                    <strong>Solución:</strong> El usuario debe enviar /start al bot primero.
+                </div>
+
+                <div class="alert alert-error">
+                    <strong>❌ Error:</strong> "Webhook not registered for POST"<br>
+                    <strong>Causa:</strong> El webhook está mal configurado.<br>
+                    <strong>Solución:</strong> Verificar que HTTP Method sea POST.
+                </div>
+
+                <div class="alert alert-error">
+                    <strong>❌ Error:</strong> "Can't parse inline keyboard button"<br>
+                    <strong>Causa:</strong> JSON de botones mal formateado.<br>
+                    <strong>Solución:</strong> Usar comillas dobles " y verificar sintaxis.
+                </div>
+
+                <div class="alert alert-error">
+                    <strong>❌ Error:</strong> El formulario no envía datos<br>
+                    <strong>Causa:</strong> JavaScript no ejecuta correctamente.<br>
+                    <strong>Solución:</strong> Abrir consola (F12) y ver errores.
+                </div>
+
+                <div class="alert alert-error">
+                    <strong>❌ Error:</strong> Schedule no se ejecuta<br>
+                    <strong>Causa:</strong> Workflow desactivado o cron incorrecto.<br>
+                    <strong>Solución:</strong> Activar workflow y verificar expresión cron.
+                </div>
+
+                <div class="alert alert-error">
+                    <strong>❌ Error:</strong> No se generan PDFs<br>
+                    <strong>Causa:</strong> Falta librería o HTML con errores.<br>
+                    <strong>Solución:</strong> Instalar nodo HTML to PDF o usar API externa.
+                </div>
+            </section>
+
+            <!-- Checklist -->
+            <section id="checklist" class="section">
+                <h2>✅ Checklist Pre-Lanzamiento</h2>
+
+                <h3>Configuración Inicial</h3>
+                <ul class="checklist">
+                    <li>n8n instalado y configurado</li>
+                    <li>PostgreSQL con base de datos creada</li>
+                    <li>Bot de Telegram creado con @BotFather</li>
+                    <li>Credenciales configuradas en n8n</li>
+                    <li>Servidor web para alojar formulario</li>
+                </ul>
+
+                <h3>Flujos de n8n</h3>
+                <ul class="checklist">
+                    <li>FLUJO 1: Registro - Construido y probado</li>
+                    <li>FLUJO 2: Bot Telegram - Construido y probado</li>
+                    <li>FLUJO 3: Recordatorio - Construido y programado</li>
+                    <li>Todos los workflows ACTIVADOS</li>
+                </ul>
+
+                <h3>Contenido</h3>
+                <ul class="checklist">
+                    <li>Formulario HTML publicado</li>
+                    <li>Datos del evento actualizados</li>
+                    <li>Coordenadas de ubicación verificadas</li>
+                    <li>Agenda del evento definida</li>
+                    <li>Información de premios lista</li>
+                </ul>
+
+                <h3>Pruebas</h3>
+                <ul class="checklist">
+                    <li>Registro en formulario → Recibir email</li>
+                    <li>Abrir PDF → Verificar QR y diseño</li>
+                    <li>Escribir al bot → Ver botones</li>
+                    <li>Pulsar cada botón → Verificar respuestas</li>
+                    <li>Ejecutar Schedule manualmente → Ver recordatorio</li>
+                </ul>
+
+                <h3>Día del Evento</h3>
+                <ul class="checklist">
+                    <li>Verificar que el Schedule esté programado</li>
+                    <li>Tener acceso a la base de datos</li>
+                    <li>Monitor de n8n disponible</li>
+                    <li>Plan B si falla algún sistema</li>
+                </ul>
+
+                <div class="alert alert-success">
+                    <strong>🎉 ¡Todo listo!</strong> Si completaste todos los puntos, tu sistema está preparado para funcionar.
+                </div>
+            </section>
+
+            <!-- Recursos -->
+            <section class="section">
+                <h2>🎓 Recursos Adicionales</h2>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>📚 Documentación</h3>
+                        <ul>
+                            <li>n8n: docs.n8n.io</li>
+                            <li>Telegram Bot API</li>
+                            <li>PostgreSQL Docs</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🔧 Herramientas</h3>
+                        <ul>
+                            <li>crontab.guru (validar cron)</li>
+                            <li>jsonlint.com (validar JSON)</li>
+                            <li>QR Code API gratuita</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>💡 Mejoras Futuras</h3>
+                        <ul>
+                            <li>Confirmación de asistencia</li>
+                            <li>Encuesta post-evento</li>
+                            <li>Certificado digital</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tips Finales -->
+            <section class="section">
+                <h2>💡 Tips y Recomendaciones</h2>
+
+                <div class="alert alert-info">
+                    <strong>🔐 Seguridad:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>No expongas tokens ni contraseñas en el código</li>
+                        <li>Usa variables de entorno en n8n</li>
+                        <li>Implementa rate limiting en webhooks</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>⚡ Rendimiento:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Optimiza las queries de PostgreSQL con índices</li>
+                        <li>Usa caché para QR codes si es posible</li>
+                        <li>Monitorea el uso de recursos</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>📊 Monitoreo:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Revisa logs de n8n regularmente</li>
+                        <li>Configura alertas para fallos</li>
+                        <li>Mantén backups de la base de datos</li>
+                    </ul>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>🚀 ¡Automatiza tu próximo evento!</strong></p>
+            <p>Comparte esta guía con la comunidad y ayuda a otros a automatizar sus eventos.</p>
+            <p style="margin-top: 20px; font-size: 14px;">Creado con ❤️ para la comunidad de FDP</p>
+        </div>
+    </div>
+</body>
+</html>
